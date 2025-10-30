@@ -7,5 +7,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/trips/compute-route/", trips_views.compute_route, name="compute-route"),
     # catch-all for React routes
-    re_path(r"^(?:.*)/?$", FrontendAppView.as_view(), name="frontend"),
+    re_path(r"^(?:.*)/?$", FrontendAppView.as_view(), name="home"),
 ]
