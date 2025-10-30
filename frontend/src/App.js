@@ -31,15 +31,13 @@ function App() {
 
     try {
       const response = await fetch(`${API_URL}/api/trips/compute-route/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          current_location: current,
-          pickup_location: pickup,
-          dropoff_location: dropoff,
-          cycle_hours: cycleHours || 0,
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    current_location: current,
+    pickup_location: pickup,
+    dropoff_location: dropoff,
+    cycle_hours: cycleHours || 0,
         }),
       });
 
