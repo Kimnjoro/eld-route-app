@@ -3,9 +3,9 @@ services:
     name: eld-route-backend
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn backend.wsgi"
+    startCommand: "gunicorn backend.wsgi:application"
     envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: backend.settings
       - key: PYTHON_VERSION
-        value: 3.11
-    plan: free
-    autoDeploy: true
+        value: 3.13.4
