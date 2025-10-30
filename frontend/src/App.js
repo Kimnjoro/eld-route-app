@@ -27,8 +27,10 @@ function App() {
     setResult(null);
     setLoading(true);
 
+    const API_URL = process.env.REACT_APP_API_URL;
+
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/trips/compute-route/", {
+      const response = await fetch(`${API_URL}/api/trips/compute-route/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +132,7 @@ function App() {
             {/* Leaflet Map */}
             <div className="map-container">
               <MapContainer
-                center={[0.52, 35.27]} // Default: Eldoret area
+                center={[0.52, 35.27]} // Eldoret area
                 zoom={10}
                 scrollWheelZoom={true}
                 style={{ height: "400px", width: "100%", borderRadius: "12px", marginTop: "15px" }}
@@ -139,16 +141,12 @@ function App() {
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                 />
-
-                {/* Example markers */}
                 <Marker position={[0.52, 35.27]} icon={markerIcon}>
                   <Popup>Pickup Location</Popup>
                 </Marker>
                 <Marker position={[0.55, 35.3]} icon={markerIcon}>
                   <Popup>Dropoff Location</Popup>
                 </Marker>
-
-                {/* Example polyline route */}
                 <Polyline
                   positions={[
                     [0.52, 35.27],
