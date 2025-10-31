@@ -21,23 +21,24 @@ function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 👇 Use environment variable (configured in .env)
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const computeRoute = async (e) => {
     e.preventDefault();
     setError("");
     setResult(null);
     setLoading(true);
 
-    const API_URL = process.env.REACT_APP_API_URL;
-
     try {
       const response = await fetch(`${API_URL}/api/trips/compute-route/`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    current_location: current,
-    pickup_location: pickup,
-    dropoff_location: dropoff,
-    cycle_hours: cycleHours || 0,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          current_location: current,
+          pickup_location: pickup,
+          dropoff_location: dropoff,
+          cycle_hours: cycleHours || 0,
         }),
       });
 
@@ -52,8 +53,8 @@ function App() {
 
       setResult(data);
     } catch (err) {
-      console.error(err);
-      setError("Error computing route. Check console for details.");
+      console.error("Fetch error:", err);
+      setError("Error connecting to server. Please check your network or backend status.");
       setLoading(false);
     }
   };
@@ -127,10 +128,9 @@ function App() {
               <p><strong>Remaining Cycle Hours:</strong> {result.remaining_cycle_hours}</p>
             </div>
 
-            {/* Leaflet Map */}
             <div className="map-container">
               <MapContainer
-                center={[0.52, 35.27]} // Eldoret area
+                center={[0.52, 35.27]}
                 zoom={10}
                 scrollWheelZoom={true}
                 style={{ height: "400px", width: "100%", borderRadius: "12px", marginTop: "15px" }}
@@ -145,14 +145,7 @@ function App() {
                 <Marker position={[0.55, 35.3]} icon={markerIcon}>
                   <Popup>Dropoff Location</Popup>
                 </Marker>
-                <Polyline
-                  positions={[
-                    [0.52, 35.27],
-                    [0.55, 35.3],
-                  ]}
-                  color="blue"
-                  weight={4}
-                />
+                <Polyline positions={[[0.52, 35.27], [0.55, 35.3]]} color="blue" weight={4} />
               </MapContainer>
             </div>
           </>
