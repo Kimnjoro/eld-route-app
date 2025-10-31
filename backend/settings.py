@@ -1,14 +1,22 @@
 import os
 from pathlib import Path
 
+# -------------------------------------------------------------------
+# Base Directory
+# -------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-0$r!uxzm!oyk5)%2%ov9w3n_1*9xp6%c!z##m=jr561wobkr9f'
-DEBUG = True
-ALLOWED_HOSTS = ["*"]  # change later for production
+# -------------------------------------------------------------------
+# Security
+# -------------------------------------------------------------------
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-0$r!uxzm!oyk5)%2%ov9w3n_1*9xp6%c!z##m=jr561wobkr9f")
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+# Allow your backend and frontend URLs
+ALLOWED_HOSTS = ["*", "eld-route-app.onrender.com", "eld-route-app-1.onrender.com"]
 
 # -------------------------------------------------------------------
-# Application definition
+# Installed Apps
 # -------------------------------------------------------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,19 +25,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
 
     # Third-party
     'rest_framework',
+    'corsheaders',
 
     # Local apps
     'trips',
 ]
 
+# -------------------------------------------------------------------
+# Middleware
+# -------------------------------------------------------------------
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # serve static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # serve static files efficiently
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -38,15 +49,22 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# -------------------------------------------------------------------
+# URL Configuration
+# -------------------------------------------------------------------
 ROOT_URLCONF = 'backend.urls'
 
+# -------------------------------------------------------------------
+# Templates (Include React Build)
+# -------------------------------------------------------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "frontend", "build")],  # ✅ ensure React build folder
+        'DIRS': [BASE_DIR / 'frontend' / 'build'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -55,6 +73,9 @@ TEMPLATES = [
     },
 ]
 
+# -------------------------------------------------------------------
+# WSGI
+# -------------------------------------------------------------------
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 # -------------------------------------------------------------------
@@ -68,7 +89,7 @@ DATABASES = {
 }
 
 # -------------------------------------------------------------------
-# Password validation
+# Password Validators
 # -------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -86,27 +107,43 @@ USE_I18N = True
 USE_TZ = True
 
 # -------------------------------------------------------------------
-# Static files
+# Static Files (React Build)
 # -------------------------------------------------------------------
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "frontend" / "build" / "static",
-]
+STATICFILES_DIRS = [BASE_DIR / 'frontend' / 'build' / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # -------------------------------------------------------------------
-# Django REST Framework configuration
+# Django REST Framework
 # -------------------------------------------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+# -------------------------------------------------------------------
+# CORS Setup (Important for React frontend)
+# -------------------------------------------------------------------
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "https://eld-route-app.onrender.com",  # Frontend
+    "https://eld-route-app-1.onrender.com",  # Backend itself
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # -------------------------------------------------------------------
 # Default primary key field type
 # -------------------------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# -------------------------------------------------------------------
+# Security & HTTPS on Render
+# -------------------------------------------------------------------
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = [
+    "https://eld-route-app.onrender.com",
+    "https://eld-route-app-1.onrender.com",
+]
