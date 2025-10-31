@@ -10,15 +10,16 @@ services:
         value: backend.settings
       - key: PYTHON_VERSION
         value: 3.13.4
-    # Backend root directory (where manage.py is)
     rootDir: .
 
-   # === FRONTEND (React) ===
+  # === FRONTEND (React) ===
   - type: web
     name: eld-route-frontend
     env: node
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: |
+      npm ci || npm install
+      npm run build
     startCommand: npx serve -s build
     envVars:
       - key: NODE_VERSION
