@@ -13,7 +13,12 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-0$r!uxzm!oyk5)%2%ov9w3n_1*
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Allow your backend and frontend URLs
-ALLOWED_HOSTS = ["*", "eld-route-app.onrender.com", "eld-route-app-1.onrender.com"]
+ALLOWED_HOSTS = [
+    "*",
+    "eld-route-app.onrender.com",       # Old backend (optional)
+    "eld-route-app-1.onrender.com",     # Current backend
+    "eld-route-frontend.onrender.com",  # ✅ Add your frontend host here
+]
 
 # -------------------------------------------------------------------
 # Installed Apps
@@ -38,7 +43,7 @@ INSTALLED_APPS = [
 # Middleware
 # -------------------------------------------------------------------
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',   # ✅ must come before CommonMiddleware
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # serve static files efficiently
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -125,25 +130,24 @@ REST_FRAMEWORK = {
 }
 
 # -------------------------------------------------------------------
-# CORS Setup (Important for React frontend)
+# ✅ CORS Setup (Important for React frontend)
 # -------------------------------------------------------------------
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "https://eld-route-app.onrender.com",  # Frontend
-    "https://eld-route-app-1.onrender.com",  # Backend itself
+    "https://eld-route-frontend.onrender.com",  # ✅ correct frontend domain
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+# -------------------------------------------------------------------
+# ✅ CSRF & HTTPS Security for Render
+# -------------------------------------------------------------------
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = [
+    "https://eld-route-frontend.onrender.com",
+    "https://eld-route-app-1.onrender.com",
+]
 
 # -------------------------------------------------------------------
 # Default primary key field type
 # -------------------------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# -------------------------------------------------------------------
-# Security & HTTPS on Render
-# -------------------------------------------------------------------
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-CSRF_TRUSTED_ORIGINS = [
-    "https://eld-route-app.onrender.com",
-    "https://eld-route-app-1.onrender.com",
-]
