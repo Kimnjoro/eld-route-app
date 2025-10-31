@@ -1,4 +1,5 @@
 services:
+  # === BACKEND (Django) ===
   - type: web
     name: eld-route-backend
     env: python
@@ -9,3 +10,18 @@ services:
         value: backend.settings
       - key: PYTHON_VERSION
         value: 3.13.4
+    # Backend root directory (where manage.py is)
+    rootDir: .
+
+  # === FRONTEND (React) ===
+  - type: web
+    name: eld-route-frontend
+    env: node
+    rootDir: frontend
+    buildCommand: npm run build
+    startCommand: npx serve -s build
+    envVars:
+      - key: NODE_VERSION
+        value: 18.18.0
+      - key: REACT_APP_API_URL
+        value: https://eld-route-backend.onrender.com
