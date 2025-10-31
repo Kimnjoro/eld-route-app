@@ -20,7 +20,8 @@ function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL;
+  // ✅ Your Render backend URL (use this directly)
+  const API_URL = "https://eld-route-app-1.onrender.com";
 
   const computeRoute = async (e) => {
     e.preventDefault();
@@ -131,6 +132,7 @@ function App() {
       {/* Map Section */}
       <div className="map-section">
         <MapContainer
+          key={result ? `${result.pickup}-${result.dropoff}` : "default"}
           center={[0.52, 35.27]}
           zoom={10}
           scrollWheelZoom={true}
@@ -140,13 +142,22 @@ function App() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
           />
-          <Marker position={[0.52, 35.27]} icon={markerIcon}>
-            <Popup>Pickup Location</Popup>
-          </Marker>
-          <Marker position={[0.55, 35.3]} icon={markerIcon}>
-            <Popup>Dropoff Location</Popup>
-          </Marker>
-          <Polyline positions={[[0.52, 35.27], [0.55, 35.3]]} color="blue" weight={4} />
+
+          {result && (
+            <>
+              <Marker position={[0.52, 35.27]} icon={markerIcon}>
+                <Popup>{result.pickup}</Popup>
+              </Marker>
+              <Marker position={[0.55, 35.3]} icon={markerIcon}>
+                <Popup>{result.dropoff}</Popup>
+              </Marker>
+              <Polyline
+                positions={[[0.52, 35.27], [0.55, 35.3]]}
+                color="blue"
+                weight={4}
+              />
+            </>
+          )}
         </MapContainer>
       </div>
     </div>
