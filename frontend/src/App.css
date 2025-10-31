@@ -2,28 +2,29 @@ body, html {
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #007bff, #00c4cc);
   height: 100%;
-  color: #222;
+  overflow: hidden;
 }
 
-.app-container {
+/* Split Layout */
+.dashboard {
   display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
-  padding: 20px;
+  width: 100%;
+  background: #f0f3f8;
 }
 
-.card {
+/* Sidebar */
+.sidebar {
+  width: 400px;
   background: white;
-  padding: 40px;
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  max-width: 420px;
-  width: 100%;
-  text-align: center;
-  animation: fadeIn 0.6s ease;
+  padding: 40px 30px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  animation: slideIn 0.6s ease;
 }
 
 .title {
@@ -32,7 +33,6 @@ body, html {
   margin-bottom: 25px;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
 }
 
@@ -55,7 +55,7 @@ body, html {
 .input-group:focus-within {
   border-color: #007bff;
   background: #fff;
-  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
 }
 
 .input-icon {
@@ -104,21 +104,37 @@ input {
   padding: 18px;
   margin-top: 20px;
   text-align: left;
-  animation: slideIn 0.5s ease;
+  border-left: 4px solid #007bff;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.map-section {
+  flex: 1;
+  height: 100vh;
+  position: relative;
 }
 
+.map-view {
+  height: 100%;
+  width: 100%;
+}
+
+/* Animation */
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-@media (max-width: 600px) {
-  .card {
-    padding: 25px;
+/* Responsive */
+@media (max-width: 900px) {
+  .dashboard {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    box-shadow: none;
+  }
+  .map-section {
+    height: 400px;
   }
 }

@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// Custom icon for markers
 const markerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
   iconSize: [25, 41],
@@ -21,7 +20,6 @@ function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 👇 Use environment variable (configured in .env)
   const API_URL = process.env.REACT_APP_API_URL;
 
   const computeRoute = async (e) => {
@@ -60,8 +58,9 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <div className="card">
+    <div className="dashboard">
+      {/* Sidebar Form */}
+      <div className="sidebar">
         <h1 className="title">
           <Truck className="icon" size={28} /> ELD Route & Cycle Calculator
         </h1>
@@ -118,38 +117,37 @@ function App() {
         {error && <p className="error">{error}</p>}
 
         {result && (
-          <>
-            <div className="result">
-              <h3>📍 Route Summary</h3>
-              <p><strong>Pickup:</strong> {result.pickup}</p>
-              <p><strong>Dropoff:</strong> {result.dropoff}</p>
-              <p><strong>Distance:</strong> {result.distance_km} km</p>
-              <p><strong>Estimated Time:</strong> {result.estimated_hours} hrs</p>
-              <p><strong>Remaining Cycle Hours:</strong> {result.remaining_cycle_hours}</p>
-            </div>
-
-            <div className="map-container">
-              <MapContainer
-                center={[0.52, 35.27]}
-                zoom={10}
-                scrollWheelZoom={true}
-                style={{ height: "400px", width: "100%", borderRadius: "12px", marginTop: "15px" }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                />
-                <Marker position={[0.52, 35.27]} icon={markerIcon}>
-                  <Popup>Pickup Location</Popup>
-                </Marker>
-                <Marker position={[0.55, 35.3]} icon={markerIcon}>
-                  <Popup>Dropoff Location</Popup>
-                </Marker>
-                <Polyline positions={[[0.52, 35.27], [0.55, 35.3]]} color="blue" weight={4} />
-              </MapContainer>
-            </div>
-          </>
+          <div className="result">
+            <h3>📍 Route Summary</h3>
+            <p><strong>Pickup:</strong> {result.pickup}</p>
+            <p><strong>Dropoff:</strong> {result.dropoff}</p>
+            <p><strong>Distance:</strong> {result.distance_km} km</p>
+            <p><strong>Estimated Time:</strong> {result.estimated_hours} hrs</p>
+            <p><strong>Remaining Cycle Hours:</strong> {result.remaining_cycle_hours}</p>
+          </div>
         )}
+      </div>
+
+      {/* Map Section */}
+      <div className="map-section">
+        <MapContainer
+          center={[0.52, 35.27]}
+          zoom={10}
+          scrollWheelZoom={true}
+          className="map-view"
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+          />
+          <Marker position={[0.52, 35.27]} icon={markerIcon}>
+            <Popup>Pickup Location</Popup>
+          </Marker>
+          <Marker position={[0.55, 35.3]} icon={markerIcon}>
+            <Popup>Dropoff Location</Popup>
+          </Marker>
+          <Polyline positions={[[0.52, 35.27], [0.55, 35.3]]} color="blue" weight={4} />
+        </MapContainer>
       </div>
     </div>
   );
